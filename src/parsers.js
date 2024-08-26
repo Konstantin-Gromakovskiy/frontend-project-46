@@ -15,4 +15,5 @@ const getData = (filePath) => {
 
   return parse;
 };
+
 export default getData;
