@@ -1,21 +1,18 @@
-import compare from '../src/compare.js';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+import compare from '../src/index.js';
 
-let object1;
-let object2;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+
+let filepath1;
+let filepath2;
 let expected;
 
 beforeEach(() => {
-  object1 = {
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
-  };
-  object2 = {
-    timeout: 20,
-    verbose: true,
-    host: 'hexlet.io',
-  };
+  filepath1 = getFixturePath('file1.json');
+  filepath2 = getFixturePath('file2.json');
 
   expected = {
     '- follow': false,
@@ -28,5 +25,5 @@ beforeEach(() => {
 });
 
 test('compare', () => {
-  expect(compare(object1, object2)).toEqual(expected);
+  expect(compare(filepath1, filepath2)).toEqual(expected);
 });

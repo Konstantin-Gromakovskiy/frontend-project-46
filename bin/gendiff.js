@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import compare from '../src/compare.js';
-import getData from '../src/parsing.js';
+import genDiff from '../src/index.js';
 
 const program = new Command();
 
@@ -13,10 +12,7 @@ program
   .arguments('<filepath1> <filepath2>')
   .option('-f, --format [type]', 'output format')
   .action((filepath1, filepath2) => {
-    const DataFile1 = getData(filepath1);
-    const DataFile2 = getData(filepath2);
-
-    console.log(compare(DataFile1, DataFile2));
+    console.log(genDiff(filepath1, filepath2));
   });
 
 program.parse();
