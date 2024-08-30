@@ -10,3 +10,7 @@ https://asciinema.org/a/BzzNxBpWYxrXPeGtjF9zqQWsI
 How to use the program with YAML files:
 
 https://asciinema.org/a/ILQLAr7Hgd4imrUILMm5vZqWC
+
+How to use the program with attached files:
+
+https://asciinema.org/a/qM2dDJU9NzOsLPNyqiQ00yTkw
