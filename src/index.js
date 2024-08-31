@@ -12,17 +12,16 @@ const genDiff = (filePath1, filePath2) => {
     const commonKeys = _.union(keys1, keys2).sort();
 
     const objectWithDifferences = commonKeys.reduce((acc, key) => {
-      if (!Object.hasOwn(obj1, key)) {
-        acc[`+ ${key}`] = obj2[key];
+      if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
+        acc[key] = { children: iter(obj1[key], obj2[key]), type: 'nested' };
+      } else if (!Object.hasOwn(obj1, key)) {
+        acc[key] = { value: obj2[key], type: 'added' };
       } else if (!Object.hasOwn(obj2, key)) {
-        acc[`- ${key}`] = obj1[key];
-      } else if (obj1[key] === obj2[key]) {
-        acc[`  ${key}`] = obj1[key];
-      } else if (_.isObject(obj1[key])) {
-        acc[`  ${key}`] = iter(obj1[key], obj2[key]);
+        acc[key] = { value: obj1[key], type: 'deleted' };
+      } else if (_.isEqual(obj1[key], obj2[key])) {
+        acc[key] = { value: obj1[key], type: 'unchanged' };
       } else {
-        acc[`- ${key}`] = obj1[key];
-        acc[`+ ${key}`] = obj2[key];
+        acc[key] = { then: obj1[key], now: obj2[key], type: 'updated' };
       }
       return acc;
     }, {});
@@ -32,4 +31,7 @@ const genDiff = (filePath1, filePath2) => {
   return stylish(result);
 };
 
-export default genDiff;
+// console.dir(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'), { depth: null });
+console.log(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'));
+
+// export default genDiff;
