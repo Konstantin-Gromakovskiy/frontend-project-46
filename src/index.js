@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import getData from './parsers.js';
-import stylish from './formatter.js';
+// import stylish from './formatter.js';
 
 const genDiff = (filePath1, filePath2) => {
   const data1 = getData(filePath1);
@@ -13,25 +13,29 @@ const genDiff = (filePath1, filePath2) => {
 
     const objectWithDifferences = commonKeys.reduce((acc, key) => {
       if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-        acc[key] = { children: iter(obj1[key], obj2[key]), type: 'nested' };
+        acc.push({ name: key, type: 'nested', children: iter(obj1[key], obj2[key]) });
       } else if (!Object.hasOwn(obj1, key)) {
-        acc[key] = { value: obj2[key], type: 'added' };
+        acc.push({ name: key, type: 'added', value: obj2[key] });
       } else if (!Object.hasOwn(obj2, key)) {
-        acc[key] = { value: obj1[key], type: 'deleted' };
+        acc.push({ name: key, type: 'deleted', value: obj1[key] });
       } else if (_.isEqual(obj1[key], obj2[key])) {
-        acc[key] = { value: obj1[key], type: 'unchanged' };
+        acc.push({ name: key, type: 'unchanged', value: obj1[key] });
       } else {
-        acc[key] = { then: obj1[key], now: obj2[key], type: 'updated' };
+        acc.push({
+          name: key, type: 'updated', then: obj1[key], now: obj2[key],
+        });
       }
+
       return acc;
-    }, {});
+    }, []);
     return objectWithDifferences;
   };
   const result = iter(data1, data2);
-  return stylish(result);
+  // return stylish(result);
+  return result;
 };
 
-// console.dir(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'), { depth: null });
-console.log(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'));
+console.dir(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'), { depth: null });
+// console.log(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'));
 
 // export default genDiff;

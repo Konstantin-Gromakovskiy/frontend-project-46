@@ -30,3 +30,34 @@ const stylish = (object) => {
 };
 
 export default stylish;
+
+// const stylish = (objects) => {
+//   console.log(t);
+//   const iter = (currentValue, depth) => {
+//     if (!_.isObject(currentValue)) return (`${currentValue}`);
+
+//     if (typeof currentValue === 'object' && currentValue.type === 'added') {
+//       console.log('пися');
+//     }
+
+//     // console.log(currentValue);
+
+//     const lines = currentValue.reduce((acc, item) => {
+//       const replacer = '.';
+//       const spaceCount = 4;
+//       const indentSize = depth * spaceCount;
+//       // const currentIndent = replacer.repeat(indentSize)
+
+//       if (item.type === 'added') {
+//         acc.push(`+ ${item.name}: ${iter(item.value, depth + 1)}`);
+//       }
+//       // console.log(acc);
+//       return acc;
+//     }, []);
+//     return lines;
+//   };
+
+//   return iter(objects, 1);
+// };
+
+// console.log(stylish(data));
