@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import recursiveTraverse from './makeString.js';
 
 const stylish = (objects) => {
