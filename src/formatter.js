@@ -1,63 +1,31 @@
 import _ from 'lodash';
+import recursiveTraverse from './makeString.js';
 
-const stylish = (object) => {
+const stylish = (objects) => {
   const iter = (currentValue, depth) => {
-    if (!_.isObject(currentValue)) return `${currentValue}\n`;
-    const replacer = '.';
-    const spaceCount = 4;
-    const indentSize = depth * spaceCount;
+    const spacesCount = 2;
+    const replacer = ' ';
+    const indentSize = depth * spacesCount;
+    const cutIndentSize = depth * spacesCount - 2;
     const currentIndent = replacer.repeat(indentSize);
-    const lines = Object.entries(currentValue)
-      .reduce((acc, [key, value]) => {
-        if (value.type === 'added') {
-          acc += `${currentIndent}+ ${key}: ${iter(value.value, depth + 1)}`;
-        } else if (value.type === 'deleted') {
-          acc += `${currentIndent}- ${key}: ${iter(value.value, depth + 1)}`;
-        } else if (value.type === 'updated') {
-          acc += `${currentIndent}- ${key}: ${iter(value.then, depth + 1)}`;
-          acc += `${currentIndent}+ ${key}: ${iter(value.then, depth + 1)}`;
-        } else if (value.type === 'unchanged') {
-          acc += `${currentIndent}  ${key}: ${iter(value.value, depth + 1)}`;
-        } else if (value.type === 'nested') {
-          acc += `${currentIndent} ${key}: {\n${iter(value.children, depth + 1)}${currentIndent}}\n`;
-        } else { acc += `\n${currentIndent}${key}: ${value}\n${currentIndent}}\n`; }
+    const cutCurrentIndent = replacer.repeat(cutIndentSize);
 
-        return acc;
-      }, '');
-    return lines;
+    if (!currentValue.children) {
+      if (currentValue.type === 'added') {
+        return `${cutCurrentIndent}+ ${currentValue.name}: ${recursiveTraverse(currentValue.value, indentSize)}\n`;
+      } if (currentValue.type === 'unchanged') {
+        return `${cutCurrentIndent}  ${currentValue.name}: ${recursiveTraverse(currentValue.value, indentSize)}\n`;
+      } if (currentValue.type === 'deleted') {
+        return `${cutCurrentIndent}- ${currentValue.name}: ${recursiveTraverse(currentValue.value, indentSize)}\n`;
+      } if (currentValue.type === 'updated') {
+        return `${cutCurrentIndent}- ${currentValue.name}: ${recursiveTraverse(currentValue.then, indentSize)}\n${cutCurrentIndent}+ ${currentValue.name}: ${recursiveTraverse(currentValue.now, indentSize)}\n`;
+      }
+    }
+    const nextObjects = currentValue.children.map((child) => iter(child, depth + 2)).join('');
+    return [`${currentIndent}${currentValue.name}: {\n${nextObjects}`, `${currentIndent}}\n`].join('');
   };
-  return iter(object, 1);
+  const result = objects.map((object) => iter(object, 1)).join('');
+  return `{\n${result}}`;
 };
 
 export default stylish;
-
-// const stylish = (objects) => {
-//   console.log(t);
-//   const iter = (currentValue, depth) => {
-//     if (!_.isObject(currentValue)) return (`${currentValue}`);
-
-//     if (typeof currentValue === 'object' && currentValue.type === 'added') {
-//       console.log('пися');
-//     }
-
-//     // console.log(currentValue);
-
-//     const lines = currentValue.reduce((acc, item) => {
-//       const replacer = '.';
-//       const spaceCount = 4;
-//       const indentSize = depth * spaceCount;
-//       // const currentIndent = replacer.repeat(indentSize)
-
-//       if (item.type === 'added') {
-//         acc.push(`+ ${item.name}: ${iter(item.value, depth + 1)}`);
-//       }
-//       // console.log(acc);
-//       return acc;
-//     }, []);
-//     return lines;
-//   };
-
-//   return iter(objects, 1);
-// };
-
-// console.log(stylish(data));

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import getData from './parsers.js';
-// import stylish from './formatter.js';
+import stylish from './formatter.js';
 
 const genDiff = (filePath1, filePath2) => {
   const data1 = getData(filePath1);
@@ -31,11 +31,7 @@ const genDiff = (filePath1, filePath2) => {
     return objectWithDifferences;
   };
   const result = iter(data1, data2);
-  // return stylish(result);
-  return result;
+  return stylish(result);
 };
 
-console.dir(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'), { depth: null });
-// console.log(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json'));
-
-// export default genDiff;
+export default genDiff;
