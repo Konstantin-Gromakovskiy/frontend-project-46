@@ -9,9 +9,9 @@ const getData = (filePath) => {
 
   if (format === '.yaml') {
     parse = yaml.load(data, 'utf-8');
-  } else if (format === '.json') {
+  } else {
     parse = JSON.parse(data);
-  } else { parse = 'unsupported format'; }
+  }
 
   return parse;
 };
