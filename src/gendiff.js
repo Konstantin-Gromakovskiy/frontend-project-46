@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import getData from './parsers.js';
-import stylish from './formatter.js';
+import stylish from './formatters/stylish.js';
+import plain from './formatters/plain.js';
+import chooseFormat from './formatters/index.js';
 
-const genDiff = (filePath1, filePath2) => {
+const genDiff = (filePath1, filePath2, formatter = 'stylish') => {
   const data1 = getData(filePath1);
   const data2 = getData(filePath2);
 
@@ -17,7 +19,7 @@ const genDiff = (filePath1, filePath2) => {
       } else if (!Object.hasOwn(obj1, key)) {
         acc.push({ name: key, type: 'added', value: obj2[key] });
       } else if (!Object.hasOwn(obj2, key)) {
-        acc.push({ name: key, type: 'deleted', value: obj1[key] });
+        acc.push({ name: key, type: 'removed', value: obj1[key] });
       } else if (_.isEqual(obj1[key], obj2[key])) {
         acc.push({ name: key, type: 'unchanged', value: obj1[key] });
       } else {
@@ -31,7 +33,10 @@ const genDiff = (filePath1, filePath2) => {
     return objectWithDifferences;
   };
   const result = iter(data1, data2);
-  return stylish(result);
+
+  return chooseFormat(result, formatter);
 };
+// console.dir(genDiff('/Users/konstantin/Programming/frontend-project-46/__fixtures__/file1.json', '/Users/konstantin/Programming/frontend-project-46/__fixtures__/file2.json', 'json'), { depth: null });
+// console.log(genDiff('/Users/konstantin/Programming/frontend-project-46/__fixtures__/file1.json', '/Users/konstantin/Programming/frontend-project-46/__fixtures__/file2.json', 'plain'));
 
 export default genDiff;

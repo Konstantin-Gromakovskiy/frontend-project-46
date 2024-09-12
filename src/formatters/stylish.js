@@ -1,4 +1,4 @@
-import recursiveTraverse from './makeString.js';
+import makeString from './makeString.js';
 
 const stylish = (objects) => {
   const iter = (currentValue, depth) => {
@@ -11,13 +11,13 @@ const stylish = (objects) => {
 
     if (!currentValue.children) {
       if (currentValue.type === 'added') {
-        return `${cutCurrentIndent}+ ${currentValue.name}: ${recursiveTraverse(currentValue.value, indentSize)}\n`;
+        return `${cutCurrentIndent}+ ${currentValue.name}: ${makeString(currentValue.value, indentSize)}\n`;
       } if (currentValue.type === 'unchanged') {
-        return `${cutCurrentIndent}  ${currentValue.name}: ${recursiveTraverse(currentValue.value, indentSize)}\n`;
-      } if (currentValue.type === 'deleted') {
-        return `${cutCurrentIndent}- ${currentValue.name}: ${recursiveTraverse(currentValue.value, indentSize)}\n`;
+        return `${cutCurrentIndent}  ${currentValue.name}: ${makeString(currentValue.value, indentSize)}\n`;
+      } if (currentValue.type === 'removed') {
+        return `${cutCurrentIndent}- ${currentValue.name}: ${makeString(currentValue.value, indentSize)}\n`;
       } if (currentValue.type === 'updated') {
-        return `${cutCurrentIndent}- ${currentValue.name}: ${recursiveTraverse(currentValue.then, indentSize)}\n${cutCurrentIndent}+ ${currentValue.name}: ${recursiveTraverse(currentValue.now, indentSize)}\n`;
+        return `${cutCurrentIndent}- ${currentValue.name}: ${makeString(currentValue.then, indentSize)}\n${cutCurrentIndent}+ ${currentValue.name}: ${makeString(currentValue.now, indentSize)}\n`;
       }
     }
     const nextObjects = currentValue.children.map((child) => iter(child, depth + 2)).join('');
