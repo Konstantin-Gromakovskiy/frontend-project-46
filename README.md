@@ -23,6 +23,7 @@ How to use the program with JSON files with stylish-format (default):
 --------------------------  
 
 Demonstration:
+
 [![asciicast](https://asciinema.org/a/UYvUCFB6V49CERwbvdideuY5T.svg)](https://asciinema.org/a/UYvUCFB6V49CERwbvdideuY5T)
 
 How to use the program with JSON files with plain-format:
