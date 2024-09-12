@@ -1,7 +1,5 @@
 import _ from 'lodash';
 import getData from './parsers.js';
-import stylish from './formatters/stylish.js';
-import plain from './formatters/plain.js';
 import chooseFormat from './formatters/index.js';
 
 const genDiff = (filePath1, filePath2, formatter = 'stylish') => {
@@ -36,7 +34,5 @@ const genDiff = (filePath1, filePath2, formatter = 'stylish') => {
 
   return chooseFormat(result, formatter);
 };
-// console.dir(genDiff('/Users/konstantin/Programming/frontend-project-46/__fixtures__/file1.json', '/Users/konstantin/Programming/frontend-project-46/__fixtures__/file2.json', 'json'), { depth: null });
-// console.log(genDiff('/Users/konstantin/Programming/frontend-project-46/__fixtures__/file1.json', '/Users/konstantin/Programming/frontend-project-46/__fixtures__/file2.json', 'plain'));
 
 export default genDiff;
