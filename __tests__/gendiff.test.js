@@ -39,7 +39,7 @@ test('plain json', () => {
   expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expected);
 });
 
-test('plain json', () => {
+test('plain yaml', () => {
   filepath1 = getFixturePath('file1.yaml');
   filepath2 = getFixturePath('file2.yaml');
   expected = readFile('expected.plain.txt');
@@ -58,4 +58,11 @@ test('json-format yaml-file', () => {
   filepath2 = getFixturePath('file2.yaml');
   expected = readFile('expected.json.txt');
   expect(genDiff(filepath1, filepath2, 'json')).toEqual(expected);
+});
+
+test('plain yml', () => {
+  filepath1 = getFixturePath('file1.yml');
+  filepath2 = getFixturePath('file2.yml');
+  expected = readFile('result_plain.txt');
+  expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expected);
 });

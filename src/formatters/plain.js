@@ -44,7 +44,8 @@ const plain = (objects) => {
     const nextObjects = currentValue.children.map((child) => iter(child, currentPathArray));
     return nextObjects.filter(Boolean).join('\n');
   };
-  const result = objects.map((object) => iter(object, [])).join('\n');
+  const resultArray = objects.map((object) => iter(object, []));
+  const result = _.compact(resultArray).join('\n');
   return result;
 };
 
