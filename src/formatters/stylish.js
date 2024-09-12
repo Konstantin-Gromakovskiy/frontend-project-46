@@ -2,7 +2,7 @@ import makeString from './makeString.js';
 
 const stylish = (objects) => {
   const iter = (currentValue, depth) => {
-    const spacesCount = 4;
+    const spacesCount = 3;
     const replacer = ' ';
     const indentSize = depth * spacesCount;
     const cutIndentSize = depth * spacesCount - 2;
