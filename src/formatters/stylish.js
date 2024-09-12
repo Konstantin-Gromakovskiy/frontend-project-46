@@ -20,7 +20,7 @@ const stylish = (objects) => {
         return `${cutCurrentIndent}- ${currentValue.name}: ${makeString(currentValue.then, indentSize)}\n${cutCurrentIndent}+ ${currentValue.name}: ${makeString(currentValue.now, indentSize)}\n`;
       }
     }
-    const nextObjects = currentValue.children.map((child) => iter(child, depth + 2)).join('');
+    const nextObjects = currentValue.children.map((child) => iter(child, depth + 1)).join('');
     return [`${currentIndent}${currentValue.name}: {\n${nextObjects}`, `${currentIndent}}\n`].join('');
   };
   const result = objects.map((object) => iter(object, 1)).join('');
