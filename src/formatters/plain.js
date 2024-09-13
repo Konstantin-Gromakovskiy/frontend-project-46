@@ -22,7 +22,8 @@ const plain = (objects) => {
     const nextObjects = currentValue.children.map((child) => iter(child, currentPathArray));
     return nextObjects.filter(Boolean).join('\n');
   };
-  const resultArray = objects.map((object) => iter(object, []));
+  const resultArray = objects.map((object) => iter(object, []))
+    .filter((object) => object !== undefined);
   const result = _.compact(resultArray).join('\n');
   return result;
 };

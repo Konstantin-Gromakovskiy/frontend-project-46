@@ -9,9 +9,10 @@ const genDiff = (filePath1, filePath2, formatter = 'stylish') => {
   const iter = (obj1, obj2) => {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
-    const commonKeys = [..._.union(keys1, keys2)].sort();
+    const commonKeys = _.union(keys1, keys2);
+    const commonSortedKeys = _.sortBy(commonKeys);
 
-    const objectWithDifferences = commonKeys.map((key) => {
+    const objectWithDifferences = commonSortedKeys.map((key) => {
       if (_.isObject(obj1[key]) && _.isObject(obj2[key])) { return { name: key, type: 'nested', children: iter(obj1[key], obj2[key]) }; }
       if (!Object.hasOwn(obj1, key)) { return { name: key, type: 'added', value: obj2[key] }; }
       if (!Object.hasOwn(obj2, key)) { return { name: key, type: 'removed', value: obj1[key] }; }
