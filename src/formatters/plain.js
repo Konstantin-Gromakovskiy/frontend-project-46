@@ -19,7 +19,6 @@ const plain = (objects) => {
     }
 
     const currentPathArray = [...pathArray, currentValue.name];
-    console.log(currentValue.children);
     const nextObjects = currentValue.children.map((child) => iter(child, currentPathArray));
     return nextObjects.filter(Boolean).join('\n');
   };
