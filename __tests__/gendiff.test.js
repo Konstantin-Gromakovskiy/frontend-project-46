@@ -8,61 +8,16 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-let filepath1;
-let filepath2;
-let expected;
+test.each([
+  ['file1.json', 'file2.json', 'expected.stylish.txt', undefined],
+  ['file1.yaml', 'file2.yaml', 'expected.stylish.txt', 'stylish'],
+  ['file1.json', 'file2.json', 'expected.plain.txt', 'plain'],
+  ['file1.json', 'file2.json', 'expected.json.txt', 'json'],
+  ['file1.yml', 'file2.yml', 'result_plain.txt', 'plain'],
+])('getDiff with %s and %s, format - %s', (file1, file2, resultFile, format) => {
+  const filePath1 = getFixturePath(file1);
+  const filePath2 = getFixturePath(file2);
+  const expectedOutput = readFile(resultFile);
 
-beforeEach(() => {
-  filepath1 = '';
-  filepath2 = '';
-  expected = '';
-});
-
-test('stylish json', () => {
-  filepath1 = getFixturePath('file1.json');
-  filepath2 = getFixturePath('file2.json');
-  expected = readFile('expected.stylish.txt');
-  expect(genDiff(filepath1, filepath2, 'stylish')).toEqual(expected);
-});
-
-test('stylish yaml', () => {
-  filepath1 = getFixturePath('file1.yaml');
-  filepath2 = getFixturePath('file2.yaml');
-  expected = readFile('expected.stylish.txt');
-  expect(genDiff(filepath1, filepath2, 'stylish')).toEqual(expected);
-});
-
-test('plain json', () => {
-  filepath1 = getFixturePath('file1.json');
-  filepath2 = getFixturePath('file2.json');
-  expected = readFile('expected.plain.txt');
-  expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expected);
-});
-
-test('plain yaml', () => {
-  filepath1 = getFixturePath('file1.yaml');
-  filepath2 = getFixturePath('file2.yaml');
-  expected = readFile('expected.plain.txt');
-  expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expected);
-});
-
-test('json-format json-file', () => {
-  filepath1 = getFixturePath('file1.json');
-  filepath2 = getFixturePath('file2.json');
-  expected = readFile('expected.json.txt');
-  expect(genDiff(filepath1, filepath2, 'json')).toEqual(expected);
-});
-
-test('json-format yaml-file', () => {
-  filepath1 = getFixturePath('file1.yaml');
-  filepath2 = getFixturePath('file2.yaml');
-  expected = readFile('expected.json.txt');
-  expect(genDiff(filepath1, filepath2, 'json')).toEqual(expected);
-});
-
-test('plain yml', () => {
-  filepath1 = getFixturePath('file1.yml');
-  filepath2 = getFixturePath('file2.yml');
-  expected = readFile('result_plain.txt');
-  expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expected);
+  expect(genDiff(filePath1, filePath2, format)).toEqual(expectedOutput);
 });
