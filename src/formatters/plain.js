@@ -11,19 +11,15 @@ const plain = (objects) => {
     if (!currentValue.children) {
       const currentPathArray = [...pathArray, currentValue.name];
       const path = currentPathArray.join('.');
-      let answer;
 
-      if (currentValue.type === 'added') {
-        return `Property '${path}' was ${currentValue.type} with value: ${getAnswer(currentValue.value)}`;
-      } if (currentValue.type === 'removed') {
-        return `Property '${path}' was ${currentValue.type}`;
-      } if (currentValue.type === 'updated') {
-        return `Property '${path}' was ${currentValue.type}. From ${getAnswer(currentValue.then)} to ${getAnswer(currentValue.now)}`;
-      }
-      return answer;
+      if (currentValue.type === 'added') { return `Property '${path}' was ${currentValue.type} with value: ${getAnswer(currentValue.value)}`; }
+      if (currentValue.type === 'removed') { return `Property '${path}' was ${currentValue.type}`; }
+      if (currentValue.type === 'updated') { return `Property '${path}' was ${currentValue.type}. From ${getAnswer(currentValue.then)} to ${getAnswer(currentValue.now)}`; }
+      return undefined;
     }
 
     const currentPathArray = [...pathArray, currentValue.name];
+    console.log(currentValue.children);
     const nextObjects = currentValue.children.map((child) => iter(child, currentPathArray));
     return nextObjects.filter(Boolean).join('\n');
   };
