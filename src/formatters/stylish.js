@@ -13,7 +13,7 @@ const stylish = (diff) => {
 
         return `${indent(currentDepth)}${key}: ${iter(value, currentDepth + 1)}`;
       });
-      return `{\n${result.join('\n')}\n${indent(currentDepth, 4)}}`;
+      return `{\n${result.join('\n')}\n${indent(currentDepth - 1)}}`;
     };
     return iter(obj, depth + 1);
   };
