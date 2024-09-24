@@ -14,10 +14,8 @@ const genDiff = (filePath1, filePath2, formatter = 'stylish') => {
   const data2 = getData(content2, extension2);
 
   const result = generateDiffTree(data1, data2);
-  // return result;
 
   return chooseFormat(result, formatter);
 };
 
 export default genDiff;
-// console.dir(genDiff('/Users/konstantin/Programming/frontend-project-46/__fixtures__/file1.json', '/Users/konstantin/Programming/frontend-project-46/__fixtures__/file2.json'), { depth: null });
