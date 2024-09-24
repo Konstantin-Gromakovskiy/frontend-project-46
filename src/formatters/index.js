@@ -1,12 +1,14 @@
 import plain from './plain.js';
-import stylish from './stylish.js';
+// import stylish from './stylish.js';
 import json from './json.js';
+import stylish from './stylish.js';
 
 const chooseFormat = (data, format) => {
   switch (format) {
     case 'plain': return plain(data);
     case 'json': return json(data);
-    default: return stylish(data);
+    case 'stylish': return stylish(data);
+    default: throw new Error('Unknown format');
   }
 };
 

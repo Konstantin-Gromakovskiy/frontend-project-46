@@ -1,30 +1,44 @@
-import makeString from './makeString.js';
+import _ from 'lodash';
 
-const stylish = (objects) => {
+const stylish = (diff) => {
+  const indent = (depth, shiftLeft = 0) => ' '.repeat(4 * depth - shiftLeft);
+
+  const stringify = (obj, depth) => {
+    if (!_.isObject(obj)) return obj;
+
+    const iter = (currentObj, currentDepth) => {
+      const entries = Object.entries(currentObj);
+      const result = entries.map(([key, value]) => {
+        if (!_.isObject(value)) return `${indent(currentDepth)}${key}: ${value}`;
+
+        return `${indent(currentDepth)}${key}: ${iter(value, currentDepth + 1)}`;
+      });
+      return `{\n${result.join('\n')}\n${indent(currentDepth, 4)}}`;
+    };
+    return iter(obj, depth + 1);
+  };
+
   const iter = (currentValue, depth) => {
-    const spacesCount = 4;
-    const replacer = ' ';
-    const indentSize = depth * spacesCount;
-    const cutIndentSize = depth * spacesCount - 2;
-    const currentIndent = replacer.repeat(indentSize);
-    const cutCurrentIndent = replacer.repeat(cutIndentSize);
-
     if (!currentValue.children) {
-      if (currentValue.type === 'added') {
-        return `${cutCurrentIndent}+ ${currentValue.name}: ${makeString(currentValue.value, indentSize)}\n`;
-      } if (currentValue.type === 'unchanged') {
-        return `${cutCurrentIndent}  ${currentValue.name}: ${makeString(currentValue.value, indentSize)}\n`;
-      } if (currentValue.type === 'removed') {
-        return `${cutCurrentIndent}- ${currentValue.name}: ${makeString(currentValue.value, indentSize)}\n`;
-      } if (currentValue.type === 'updated') {
-        return `${cutCurrentIndent}- ${currentValue.name}: ${makeString(currentValue.then, indentSize)}\n${cutCurrentIndent}+ ${currentValue.name}: ${makeString(currentValue.now, indentSize)}\n`;
+      switch (currentValue.type) {
+        case 'added':
+          return `${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
+        case 'removed':
+          return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
+        case 'unchanged':
+          return `${indent(depth, 2)}  ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
+        case 'updated':
+          return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.then, depth)}\n${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.now, depth)}`;
+        default: throw Error('unknown type');
       }
     }
-    const nextObjects = currentValue.children.map((child) => iter(child, depth + 1)).join('');
-    return [`${currentIndent}${currentValue.name}: {\n${nextObjects}`, `${currentIndent}}\n`].join('');
-  };
-  const result = objects.map((object) => iter(object, 1)).join('');
-  return `{\n${result}}`;
-};
 
+    const tree = currentValue.children.map((child) => `${iter(child, depth + 1)}`);
+    const name = `${indent(depth) + currentValue.name}: {`;
+    const bracketIndent = `${indent(depth)}}`;
+    return [name, ...tree, bracketIndent].join('\n');
+  };
+  const result = diff.map((object) => iter(object, 1));
+  return `{\n${result.join('\n')}\n}`;
+};
 export default stylish;
