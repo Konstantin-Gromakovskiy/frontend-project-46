@@ -19,26 +19,23 @@ const stylish = (diff) => {
   };
 
   const iter = (currentValue, depth) => {
-    if (!currentValue.children) {
-      switch (currentValue.type) {
-        case 'added':
-          return `${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
-        case 'removed':
-          return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
-        case 'unchanged':
-          return `${indent(depth, 2)}  ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
-        case 'updated':
-          return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.then, depth)}\n${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.now, depth)}`;
-        default: throw Error('unknown type');
-      }
+    switch (currentValue.type) {
+      case 'added':
+        return `${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
+      case 'removed':
+        return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
+      case 'unchanged':
+        return `${indent(depth, 2)}  ${currentValue.name}: ${stringify(currentValue.value, depth)}`;
+      case 'updated':
+        return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.then, depth)}\n${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.now, depth)}`;
+      case 'nested':
+        // Я сделал как ты сказал, но линтер говорит, что нельзя в кейсе создавать константы
+        // Если без констант, то получается вот такой длинный return
+        // Это норм или можно сделать понятнее?
+        return [`${indent(depth) + currentValue.name}: {`, currentValue.children.map((child) => `${iter(child, depth + 1)}`), `${indent(depth)}}`].flat().join('\n');
+      default: throw Error('unknown type');
     }
-
-    const tree = currentValue.children.map((child) => `${iter(child, depth + 1)}`);
-    const name = `${indent(depth) + currentValue.name}: {`;
-    const bracketIndent = `${indent(depth)}}`;
-    return [name, ...tree, bracketIndent].join('\n');
-  };
-  const result = diff.map((object) => iter(object, 1));
+  }; const result = diff.map((object) => iter(object, 1));
   return `{\n${result.join('\n')}\n}`;
 };
 export default stylish;

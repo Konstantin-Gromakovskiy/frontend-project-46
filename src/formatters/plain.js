@@ -8,23 +8,20 @@ const plain = (objects) => {
   };
 
   const iter = (currentValue, pathArray) => {
-    if (!currentValue.children) {
-      const currentPathArray = [...pathArray, currentValue.name];
-      const path = currentPathArray.join('.');
-
-      if (currentValue.type === 'added') { return `Property '${path}' was ${currentValue.type} with value: ${getAnswer(currentValue.value)}`; }
-      if (currentValue.type === 'removed') { return `Property '${path}' was ${currentValue.type}`; }
-      if (currentValue.type === 'updated') { return `Property '${path}' was ${currentValue.type}. From ${getAnswer(currentValue.then)} to ${getAnswer(currentValue.now)}`; }
-      return undefined;
-    }
-
     const currentPathArray = [...pathArray, currentValue.name];
-    const nextObjects = currentValue.children.map((child) => iter(child, currentPathArray));
-    return nextObjects.filter(Boolean).join('\n');
+    const path = currentPathArray.join('.');
+
+    switch (currentValue.type) {
+      case 'added': return `Property '${path}' was ${currentValue.type} with value: ${getAnswer(currentValue.value)}`;
+      case 'removed': return `Property '${path}' was ${currentValue.type}`;
+      case 'updated': return `Property '${path}' was ${currentValue.type}. From ${getAnswer(currentValue.then)} to ${getAnswer(currentValue.now)}`;
+      case 'unchanged': return undefined;
+      case 'nested': return currentValue.children.map((child) => iter(child, currentPathArray)).filter(Boolean).join('\n');
+      default: throw Error('unknown type');
+    }
   };
-  const resultArray = objects.map((object) => iter(object, []))
-    .filter((object) => object !== undefined);
-  const result = _.compact(resultArray).join('\n');
+  const resultArray = objects.flatMap((object) => iter(object, []));
+  const result = _.compact(resultArray).join('\n'); // здесь все равно остается последний пустой элемент в конце массива, поэтому применяю compact
   return result;
 };
 
