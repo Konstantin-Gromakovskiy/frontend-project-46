@@ -13,7 +13,7 @@ const stylish = (diff) => {
 
         return `${indent(currentDepth)}${key}: ${iter(value, currentDepth + 1)}`;
       });
-      return `{\n${result.join('\n')}\n${indent(currentDepth - 1)}}`;
+      return ['{', ...result, `${indent(currentDepth - 1)}}`].join('\n');
     };
     return iter(obj, depth + 1);
   };
@@ -29,13 +29,11 @@ const stylish = (diff) => {
       case 'updated':
         return `${indent(depth, 2)}- ${currentValue.name}: ${stringify(currentValue.then, depth)}\n${indent(depth, 2)}+ ${currentValue.name}: ${stringify(currentValue.now, depth)}`;
       case 'nested':
-        // Я сделал как ты сказал, но линтер говорит, что нельзя в кейсе создавать константы
-        // Если без констант, то получается вот такой длинный return
-        // Это норм или можно сделать понятнее?
-        return [`${indent(depth) + currentValue.name}: {`, currentValue.children.map((child) => `${iter(child, depth + 1)}`), `${indent(depth)}}`].flat().join('\n');
+        return [`${indent(depth) + currentValue.name}: {`, ...currentValue.children.flatMap((child) => iter(child, depth + 1)), `${indent(depth)}}`];
       default: throw Error('unknown type');
     }
-  }; const result = diff.map((object) => iter(object, 1));
-  return `{\n${result.join('\n')}\n}`;
+  };
+  const result = diff.flatMap((object) => iter(object, 1));
+  return ['{', ...result, '}'].join('\n');
 };
 export default stylish;

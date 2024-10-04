@@ -12,17 +12,17 @@ const plain = (objects) => {
     const path = currentPathArray.join('.');
 
     switch (currentValue.type) {
-      case 'added': return `Property '${path}' was ${currentValue.type} with value: ${getAnswer(currentValue.value)}`;
-      case 'removed': return `Property '${path}' was ${currentValue.type}`;
-      case 'updated': return `Property '${path}' was ${currentValue.type}. From ${getAnswer(currentValue.then)} to ${getAnswer(currentValue.now)}`;
-      case 'unchanged': return undefined;
-      case 'nested': return currentValue.children.map((child) => iter(child, currentPathArray)).filter(Boolean).join('\n');
+      case 'added': return [`Property '${path}' was ${currentValue.type} with value: ${getAnswer(currentValue.value)}`];
+      case 'removed': return [`Property '${path}' was ${currentValue.type}`];
+      case 'updated': return [`Property '${path}' was ${currentValue.type}. From ${getAnswer(currentValue.then)} to ${getAnswer(currentValue.now)}`];
+      case 'unchanged': return [];
+      case 'nested': return currentValue.children.flatMap((child) => iter(child, currentPathArray));
       default: throw Error('unknown type');
     }
   };
+  // Извини, я в этом месте жестко тупанул в прошлый раз :) Спасибо за помощь!
   const resultArray = objects.flatMap((object) => iter(object, []));
-  const result = _.compact(resultArray).join('\n'); // здесь все равно остается последний пустой элемент в конце массива, поэтому применяю compact
-  return result;
+  return resultArray.join('\n');
 };
 
 export default plain;
