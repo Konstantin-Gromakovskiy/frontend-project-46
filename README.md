@@ -23,7 +23,9 @@ How to use the program with JSON files with stylish-format (default):
 
 Demonstration:
 
-[![asciicast](https://asciinema.org/a/UYvUCFB6V49CERwbvdideuY5T.svg)](https://asciinema.org/a/UYvUCFB6V49CERwbvdideuY5T)
+<a href="https://asciinema.org/a/UYvUCFB6V49CERwbvdideuY5T">
+  <img src="https://asciinema.org/a/UYvUCFB6V49CERwbvdideuY5T.svg" width="400" alt="asciinema preview">
+</a>
 
 How to use the program with JSON files with plain-format:
 --------------------------  
